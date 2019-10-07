@@ -201,6 +201,7 @@ class DS_GUI extends JFrame implements ItemListener{
 				
 				Graphics g = shape.getGraphics();
 				Graphics2D g2 = (Graphics2D) g; 
+				shape.setBufImage(bufImage);
 				g2.drawImage(bufImage, null, 0, 0); 
 				
 			}
