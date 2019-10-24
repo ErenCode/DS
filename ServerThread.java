@@ -10,6 +10,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
+
 public class ServerThread implements Runnable {
     private Socket client = null;
     private JSONObject command = null;
@@ -304,7 +306,9 @@ public class ServerThread implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Connection Lost! Please close the application.");
+          //  System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application.");
+            System.exit(0);
         }
 
     }
@@ -332,7 +336,9 @@ public class ServerThread implements Runnable {
             }
 
         } catch (Exception e) {
-            System.out.println("Connection Lost! Please close the application.");
+           // System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application.");
+            System.exit(0);
         }
     }
 

@@ -240,15 +240,20 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
                         }
                         assert sum == matrixString.length();
                     }catch(IIOException e2) {
-                        System.out.println("Cannot read file.");
+                        //System.out.println("Cannot read file.");
+                        JOptionPane.showMessageDialog(null, "Cannot read file");
                     } catch (Exception e1) {
                         // TODO Auto-generated catch block
-                        System.out.println("Connection Lost! Please close the application.");
+                        //System.out.println("Connection Lost! Please close the application.");
+                        JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                        System.exit(0);
                     }
 
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
-                    System.out.println("Connection Lost! Please close the application.");
+                    //System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                    System.exit(0);
                 }
 
             }
@@ -263,7 +268,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
                     os.flush();
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
-                    System.out.println("Connection Lost! Please close the application.");
+                    //System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                    System.exit(0);
                 }
 
                 /*
@@ -306,7 +313,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
                     count++;
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
-                    System.out.println("Connection Lost! Please close the application.");
+                  //  System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                    System.exit(0);
                 }
             }
         });
@@ -318,7 +327,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
                     ImageIO.write(myImage, "jpg", new File(filePath + ".jpg"));
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
-                    System.out.println("Connection Lost! Please close the application.");
+                   // System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                    System.exit(0);
                 }
             }
         });
@@ -503,7 +514,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
             os.writeUTF(test.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+            System.exit(0);
         }
     }
 
@@ -671,7 +684,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener{
             os.flush();
         } catch (Exception e1) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+            System.exit(0);
         }
 
 

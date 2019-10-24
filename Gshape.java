@@ -12,8 +12,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.json.simple.JSONObject;
 
@@ -202,7 +201,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
                 os.flush();
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
-                System.out.println("Connection Lost! Please close the application.");
+                //System.out.println("Connection Lost! Please close the application.");
+                JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                System.exit(0);
             }
 
             // endX = startX;
@@ -255,7 +256,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
             os.flush();
         } catch (Exception ie) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+            System.exit(0);
         }
         // check with xu
         Graphics2D ga = bufImage.createGraphics();
@@ -324,7 +327,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
                 os.flush();
             } catch (Exception ie) {
                 // TODO Auto-generated catch block
-                System.out.println("Connection Lost! Please close the application.");
+                //System.out.println("Connection Lost! Please close the application.");
+                JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                System.exit(0);
             }
             // this.repaint();
             // used to update the pen's trace
@@ -351,7 +356,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
                 os.flush();
             } catch (Exception ie) {
                 // TODO Auto-generated catch block
-                System.out.println("Connection Lost! Please close the application.");
+                //System.out.println("Connection Lost! Please close the application.");
+                JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+                System.exit(0);
             }
 
             // used to update the eraser's trace

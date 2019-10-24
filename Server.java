@@ -2,6 +2,7 @@
  * author: Linchu Liu
  * ID: 978006
  */
+import javax.swing.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,17 +24,25 @@ public class Server {
                 Server server = new Server();
                 server.start(server,port);
             } else {
-                System.out.println("You must input a valid port number in the range 1025 - 65534.");
+                /*System.out.println("You must input a valid port number in the range 1025 - 65534.");
+                System.exit(0);*/
+                JOptionPane.showMessageDialog(null, "You must input a valid port number in the range 1025 - 65534.");
                 System.exit(0);
             }
 
         } catch (NumberFormatException e) {
-            System.out.println("You must input a number as port number.");
+           // System.out.println("You must input a number as port number.");
+            JOptionPane.showMessageDialog(null, "You must input a number as port number.");
+            System.exit(0);
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("You must input one and only one number as port number.");
+           // System.out.println("You must input one and only one number as port number.");
+            JOptionPane.showMessageDialog(null, "You must input one and only one number as port number.");
+            System.exit(0);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+           // System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
+            System.exit(0);
         }
     }
 
@@ -56,7 +65,9 @@ public class Server {
             serverSocket.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
+            System.exit(0);
         }
         System.exit(0);
     }

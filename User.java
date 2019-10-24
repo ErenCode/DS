@@ -2,14 +2,13 @@
  * author: Linchu Liu
  * ID: 978006
  */
-import javax.swing.JButton;
+import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Label;
-import javax.swing.JFrame;
 import java.awt.TextArea;
 import java.awt.TextField;
 import org.json.simple.JSONObject;
@@ -81,6 +80,7 @@ public class User implements ActionListener {
 			System.exit(0);
         } catch (Exception e1) {
             System.out.println("Connection failed. You didn't enter the correct server address or port number. \n Please try again. \n");
+            System.exit(0);
         }
         client_obj.gui = new Client_GUI(client_obj);
         client_obj.gui.setBounds(100, 100, 600, 437);
@@ -107,7 +107,8 @@ public class User implements ActionListener {
             os.writeUTF(newCommand.toJSONString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
+            System.exit(0);
         }
         int count1 = 0;
 
@@ -177,9 +178,8 @@ public class User implements ActionListener {
                                     ta.append("Your auto generated user id is " + Integer.parseInt(user_id) + ".\n");
                                 }
                             } else {
-                                ta.append(
-                                        "Cannot join the white board. \n Connection is rejected by the manager.\n");
-                                ta.append("Please close the application.\n");
+                                JOptionPane.showMessageDialog(null, "Cannot join the whiteboard. Connection is rejected by the manager. \n Closing the application.");
+                                System.exit(0);
                                 break;
                             }
                         }
@@ -190,10 +190,14 @@ public class User implements ActionListener {
                                 ta.append(
                                         "You are kicked by manager. Please close the application.\n");
                                 ua.setText("");
+                                JOptionPane.showMessageDialog(null, "You are kicked by manager. Closing the application.");
+                                System.exit(0);
                             }
                             if (received.get("reason").equals("close")) {
                                 ta.append("Manager is closed. Please close the application.\n");
                                 ua.setText("");
+                                JOptionPane.showMessageDialog(null, "Manager is closed. Closing the application.");
+                                System.exit(0);
                             }
 
                         }
@@ -274,8 +278,12 @@ public class User implements ActionListener {
             }
         } catch (UnknownHostException e) {
             System.out.println("You didn't enter the correct ip address or port number.");
+            JOptionPane.showMessageDialog(null, "You didn't enter the correct ip address or port number.. Closing the application.");
+            System.exit(0);
         } catch (Exception e) {
             System.out.println("Connection failed.");
+            JOptionPane.showMessageDialog(null, "Connection Failed. Closing the application.");
+            System.exit(0);
         }
     }
 
@@ -286,16 +294,23 @@ public class User implements ActionListener {
     private void setPort(String port) {
         if (port == null) {
             ta.append("Didn't enter port number. Please try again. \n");
+            JOptionPane.showMessageDialog(null, "Didn't enter port number. Please try again.");
+            System.exit(0);
         } else {
             try {
                 this.port = Integer.parseInt(port);
             } catch (NumberFormatException e) {
                 ta.append(
                         "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again. ");
+                System.exit(0);
             }
             if (this.port <= 1024 || this.port >= 65535) {
                 ta.append(
                         "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again. ");
+                System.exit(0);
+
             }
 
         }
@@ -331,6 +346,8 @@ public class User implements ActionListener {
                     }
                 } catch (Exception e2) {
                     System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection closed. Closing the application. ");
+                    System.exit(0);
                 } finally {
                     System.exit(0);
                 }
@@ -406,13 +423,16 @@ public class User implements ActionListener {
                     ta2.append("You: "+tf.getText()+"\n");
                 }
                 else {
-                    ta.append("You cannot enter empty input.\n");
+                    //ta.append("You cannot enter empty input.\n");
+                    JOptionPane.showMessageDialog(null, "You cannot enter empty input. ");
                 }
 
 
             }
         } catch (Exception ex) {
             ta.append("Connection Lost! Please close the client and reconnect to server. \n");
+            JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application. Please, try to reconnect to server");
+            System.exit(0);
         }
 
     }

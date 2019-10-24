@@ -22,12 +22,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.json.simple.JSONObject;
 
@@ -481,7 +476,9 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener {
             os.flush();
         } catch (Exception e1) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application.");
+            System.exit(0);
         }
 
 

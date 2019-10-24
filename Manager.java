@@ -4,7 +4,7 @@
  */
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
+import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -12,7 +12,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Label;
-import javax.swing.JFrame;
 import java.awt.TextArea;
 import java.awt.TextField;
 import org.json.simple.JSONObject;
@@ -81,7 +80,9 @@ public class Manager implements ActionListener {
 			System.exit(0);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application");
+            System.exit(0);
         }
 
         client_obj.gui = new DS_GUI(client_obj);
@@ -107,7 +108,9 @@ public class Manager implements ActionListener {
             os.writeUTF(newCommand.toJSONString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            System.out.println("Connection Lost! Please close the application.");
+            //System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
+            System.exit(0);
         }
         int count1 = 0;
     }
@@ -134,8 +137,10 @@ public class Manager implements ActionListener {
                             if (response.equals("success")) {
                                 ta.append(username + " create a new white board successfully.\n");
                             } else {
-                                ta.append("Cannot create a new white board.\n");
-                                ta.append("Please close the manager GUI.\n");
+                               // ta.append("Cannot create a new white board.\n");
+                               // ta.append("Please close the manager GUI.\n");
+                                JOptionPane.showMessageDialog(null, "Cannot create a new white board. Closing the application");
+                                System.exit(0);
                                 break;
                             }
                         }
@@ -223,9 +228,13 @@ public class Manager implements ActionListener {
             }
 
         } catch (UnknownHostException e) {
-            System.out.println("You didn't enter the correct ip address or port number.");
+            //System.out.println("You didn't enter the correct ip address or port number.");
+            JOptionPane.showMessageDialog(null, "You didn't enter the correct ip address or port number.");
+            System.exit(0);
         } catch (Exception e) {
-            System.out.println("Connection failed.");
+            //System.out.println("Connection failed.");
+            JOptionPane.showMessageDialog(null, "Connection Failed.");
+            System.exit(0);
         }
     }
 
@@ -260,17 +269,23 @@ public class Manager implements ActionListener {
 
     private void setPort(String port) {
         if (port == null) {
-            ta.append("Didn't enter port number. Please try again. \n");
+            //ta.append("Didn't enter port number. Please try again. \n");
+            JOptionPane.showMessageDialog(null, "Didn't enter port number. Please try again");
+            System.exit(0);
         } else {
             try {
                 this.port = Integer.parseInt(port);
             } catch (NumberFormatException e) {
-                ta.append(
-                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+              //  ta.append(
+              //          "Invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again.");
+                System.exit(0);
             }
             if (this.port <= 1024 || this.port >= 65535) {
-                ta.append(
-                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+               // ta.append(
+                //        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again.");
+                System.exit(0);
             }
 
         }
@@ -305,7 +320,9 @@ public class Manager implements ActionListener {
                     is.close();
                     client.close();
                 } catch (Exception e2) {
-                    System.out.println("Connection Lost! Please close the application.");
+                 //   System.out.println("Connection Lost! Please close the application.");
+                    JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");
+                    System.exit(0);
                 } finally {
                     System.exit(0);
                 }
@@ -443,7 +460,9 @@ public class Manager implements ActionListener {
                             os.flush();
                         } catch (Exception e1) {
                             // TODO Auto-generated catch block
-                            System.out.println("Connection Lost! Please close the application.");
+                           // System.out.println("Connection Lost! Please close the application.");
+                            JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");
+                            System.exit(0);
                         }
                     }
                 });
@@ -497,7 +516,9 @@ public class Manager implements ActionListener {
                         System.out.println("Cannot read file.");
                     } catch (Exception e1) {
                         // TODO Auto-generated catch block
-                        System.out.println("Connection Lost! Please close the application.");
+                        //System.out.println("Connection Lost! Please close the application.");
+                        JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");
+                        System.exit(0);
                     }
                     ta.append("User " + join_client_ID + " is connected.\n");
                 }
@@ -531,14 +552,17 @@ public class Manager implements ActionListener {
                     ta2.append("You: "+tf.getText()+"\n");
                 }
                 else {
-                    ta.append("You cannot enter empty input.\n");
+                    //ta.append("You cannot enter empty input.\n");
+                    JOptionPane.showMessageDialog(null, "You cannot enter empty input");
                 }
 
 
             }
 
         } catch (Exception ex) {
-            ta.append("Connection Lost! Please close the client and reconnect to server. \n");
+            //ta.append("Connection Lost! Please close the client and reconnect to server. \n");
+            JOptionPane.showMessageDialog(null, "Connection Lost! Try to reconnect to server.");
+            System.exit(0);
         }
 
     }
