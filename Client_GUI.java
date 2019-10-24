@@ -17,12 +17,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -34,7 +31,7 @@ import javax.swing.JPanel;
 
 import org.json.simple.JSONObject;
 
-class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListener {
+class Client_GUI extends JFrame implements ItemListener,KeyListener {
 
     private JButton ovalBt;
     private JButton circleBt;
@@ -327,9 +324,9 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
             JSONObject test = new JSONObject();
             test.put("command_name", "send");
             os.writeUTF(test.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
     }
 
@@ -344,7 +341,6 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
             Graphics2D g2 = shape.getBufImage().createGraphics();
             Color c1 = toColor(command.get("color").toString());
 
-            System.out.println(command.toString());
             g2.setColor(c1);
             String type = command.get("shape").toString();
             drawUpdate(type, g2);
@@ -358,7 +354,7 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
             Color c1 = toColor(command.get("color").toString());
             g2.setColor(c1);
             String type = command.get("shape").toString();
-            drawDragged(type, g2);
+            drawUpdate(type, g2);
             shape.repaint();
         }
 
@@ -375,26 +371,7 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
 
     }
 
-    private void drawDragged(String type, Graphics2D g2) {
-    	switch (type) {
-		case "eraser":
-			// g2.setColor(Color.white);
-			g2.setColor(new Color(254, 255, 255));// similar to white
-			g2.setStroke(new BasicStroke(20));
-			g2.drawLine(startX, startY, endX, endY);
-			g2.setColor(this.c);
-			break;
-		case "pen":
-			// how to implement the pen func
-			g2.drawLine(startX, startY, endX, endY);
-			break;
-		default:
-			break;
-		}
-		
-	}
-
-	private void drawText(String type, Graphics2D g2,String text) {
+    private void drawText(String type, Graphics2D g2,String text) {
         System.out.println(text);
         System.out.println(startX);
         System.out.println(startY);
@@ -410,13 +387,51 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
 
                 break;
             case "rectangle":
-                g2.drawRect(startX, startY, endX - startX, endY - startY);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawRect(startX, startY, endX - startX,endY - startY);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawRect(startX, endY, endX - startX,startY-endY);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawRect(endX, startY,startX-endX,endY - startY);
+    				//System.out.println("1111");
+    			}else if(startX>endX&&startY>endY) {
+    				g2.drawRect(endX, endY,startX-endX,startY-endY);
+    			}
                 break;
             case "circle":
-                g2.drawArc(startX, startY, endX - startX, endX - startX, 0, 360);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawArc(startX, startY, endX - startX, endX - startX, 0, 360);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawArc(startX, endY, endX - startX, endX - startX, 0, 360);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawArc(endX, startY, startX-endX, startX-endX, 0, 360);
+    			}else if(startX>endX&&startY>endY){
+    				g2.drawArc(endX, endY, startY-endY, startY-endY, 0, 360);//weired
+    				//System.out.println("11111");
+    			}
                 break;
             case "oval":
-                g2.drawOval(startX, startY, endX - startX, endY - startY);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawOval(startX, startY, endX - startX, endY - startY);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawOval(startX, endY, endX - startX,startY-endY);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawOval(endX, startY, startX-endX,endY - startY);
+    			}else if(startX>endX&&startY>endY){
+    				g2.drawOval(endX, endY, startX-endX, startY-endY);
+    				//System.out.println("11111");
+    			}
+                break;
+            case "eraser":
+                // g2.setColor(Color.white);
+                g2.setColor(new Color(254, 255, 255));// similar to white
+                g2.setStroke(new BasicStroke(20));
+                g2.drawLine(startX, startY, endX, endY);
+                g2.setColor(this.c);
+                break;
+            case "pen":
+                // how to implement the pen func
+                g2.drawLine(startX, startY, endX, endY);
                 break;
             default:
                 break;
@@ -464,9 +479,9 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         try {
             os.writeUTF(command.toString());
             os.flush();
-        } catch (IOException e1) {
+        } catch (Exception e1) {
             // TODO Auto-generated catch block
-            e1.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
 
 
@@ -487,63 +502,5 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         // TODO Auto-generated method stub
 
     }
-
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowClosing(WindowEvent e) {
-		
-		JSONObject newCommand = new JSONObject();
-        newCommand.put("command_name", "quit");
-        newCommand.put("client_ID", user.user_id);
-        try {
-            if (!user.is_kicked) {
-                os.writeUTF(newCommand.toJSONString());
-                os.flush();
-                os.close();
-                user.is.close();
-                // client.close();
-            }
-        } catch (IOException e2) {
-            e2.printStackTrace();
-        } finally {
-            System.exit(0);
-        }
-		
-	}
-
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

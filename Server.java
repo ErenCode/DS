@@ -2,7 +2,6 @@
  * author: Linchu Liu
  * ID: 978006
  */
-import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,15 +19,25 @@ public class Server {
     public static void main(String[] args) {
         try {
             int port = Integer.parseInt(args[0]);
-            Server server = new Server();
-            server.start(server,port);
-        } catch (IOException e) {
+            if (port >= 1025 && port <= 65534 ) {
+                Server server = new Server();
+                server.start(server,port);
+            } else {
+                System.out.println("You must input a valid port number in the range 1025 - 65534.");
+                System.exit(0);
+            }
+
+        } catch (NumberFormatException e) {
+            System.out.println("You must input a number as port number.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You must input one and only one number as port number.");
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
     }
 
-    private void start(Server server,int port) throws IOException {
+    private void start(Server server,int port) throws Exception {
         serverSocket = new ServerSocket(port);
         int client_identifier = 0;
         while (true) {
@@ -45,9 +54,9 @@ public class Server {
         System.out.println("Server is closed.");
         try {
             serverSocket.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
         System.exit(0);
     }
@@ -72,9 +81,6 @@ public class Server {
         return user_map;
     }
 
-//	public ArrayList<WhiteBoard> getWB_list() {
-//		return whiteboard_list;
-//	}
 
     public ArrayList<Socket> getClient_list() {
         return client_list;

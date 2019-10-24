@@ -11,7 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -51,7 +50,6 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
 
         setPreferredSize(new Dimension(LENGTH, WEIGTH));
         setBackground(Color.white);
-        System.out.println("in Gshape");
         this.addMouseListener(this);// add into the whiteboard
         this.addMouseMotionListener(this);
     }
@@ -81,13 +79,40 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
 
                 break;
             case "rectangle":
-                g2.drawRect(startX, startY, endX - startX, endY - startY);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawRect(startX, startY, endX - startX,endY - startY);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawRect(startX, endY, endX - startX,startY-endY);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawRect(endX, startY,startX-endX,endY - startY);
+    				//System.out.println("1111");
+    			}else if(startX>endX&&startY>endY) {
+    				g2.drawRect(endX, endY,startX-endX,startY-endY);
+    			}
                 break;
             case "circle":
-                g2.drawArc(startX, startY, endX - startX, endX - startX, 0, 360);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawArc(startX, startY, endX - startX, endX - startX, 0, 360);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawArc(startX, endY, endX - startX, endX - startX, 0, 360);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawArc(endX, startY, startX-endX, startX-endX, 0, 360);
+    			}else if(startX>endX&&startY>endY){
+    				g2.drawArc(endX, endY, startY-endY, startY-endY, 0, 360);//weired
+    				//System.out.println("11111");
+    			}
                 break;
             case "oval":
-                g2.drawOval(startX, startY, endX - startX, endY - startY);
+            	if(startX<endX&&startY<endY) {
+    				g2.drawOval(startX, startY, endX - startX, endY - startY);
+    			}else if(startX<endX&&startY>endY) {
+    				g2.drawOval(startX, endY, endX - startX,startY-endY);
+    			}else if(startX>endX&&startY<endY) {
+    				g2.drawOval(endX, startY, startX-endX,endY - startY);
+    			}else if(startX>endX&&startY>endY){
+    				g2.drawOval(endX, endY, startX-endX, startY-endY);
+    				//System.out.println("11111");
+    			}
                 break;
             case "eraser":
                 // g2.setColor(Color.white);
@@ -175,9 +200,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
             try {
                 os.writeUTF(command.toString());
                 os.flush();
-            } catch (IOException e1) {
+            } catch (Exception e1) {
                 // TODO Auto-generated catch block
-                e1.printStackTrace();
+                System.out.println("Connection Lost! Please close the application.");
             }
 
             // endX = startX;
@@ -228,9 +253,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
         try {
             os.writeUTF(command.toString());
             os.flush();
-        } catch (IOException ie) {
+        } catch (Exception ie) {
             // TODO Auto-generated catch block
-            ie.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
         // check with xu
         Graphics2D ga = bufImage.createGraphics();
@@ -297,9 +322,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
             try {
                 os.writeUTF(command.toString());
                 os.flush();
-            } catch (IOException ie) {
+            } catch (Exception ie) {
                 // TODO Auto-generated catch block
-                ie.printStackTrace();
+                System.out.println("Connection Lost! Please close the application.");
             }
             // this.repaint();
             // used to update the pen's trace
@@ -324,9 +349,9 @@ public class Gshape extends JPanel implements MouseListener, MouseMotionListener
             try {
                 os.writeUTF(command.toString());
                 os.flush();
-            } catch (IOException ie) {
+            } catch (Exception ie) {
                 // TODO Auto-generated catch block
-                ie.printStackTrace();
+                System.out.println("Connection Lost! Please close the application.");
             }
 
             // used to update the eraser's trace

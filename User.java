@@ -1,4 +1,3 @@
-
 /*
  * author: Linchu Liu
  * ID: 978006
@@ -22,7 +21,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
@@ -32,15 +31,16 @@ public class User implements ActionListener {
     private TextField tf = null;
     private String address;
     private int port = 0;
+    private String username;
     private TextArea ta = null;
     private JButton list = null;
-    public DataInputStream is = null;
+    private DataInputStream is = null;
     private DataOutputStream os = null;
     private Socket client = null;
     private JSONObject newCommand = null;
     private JSONObject received = null;
-    public String user_id;
-    public boolean is_kicked = false;
+    private String user_id;
+    private boolean is_kicked = false;
     private TextArea ua;
     //	private Client_GUI gui=null;
     private String newMatrix = "";
@@ -56,10 +56,14 @@ public class User implements ActionListener {
         try {
             client_obj.address = args[0];
             client_obj.setPort(args[1]);
+            client_obj.username = args[2];
+
         } catch (ArrayIndexOutOfBoundsException e) {
-            client_obj.ta.append("Didn't enter address, \n");
-            client_obj.ta.append("or didn't enter port number. Please try again. \n");
+            System.out.println("You didn't enter all of address, port number and username.");
+            System.out.println("Please reopen this application and follow the pattern: java -jar Manager.jar <ip_address> <port_number> username");
+            System.exit(0);
         }
+
         try {
             client_obj.client = new Socket(client_obj.address, client_obj.port);
             client_obj.is = new DataInputStream(client_obj.client.getInputStream());
@@ -72,18 +76,19 @@ public class User implements ActionListener {
             client_obj.newCommand.put("command_name", "join_request");
             client_obj.os.writeUTF(client_obj.newCommand.toJSONString());
 
-        } catch (IOException e1) {
-            client_obj.ta.append(
-                    "connection failed. Didn't enter the correct server address or port number. \n Please try again. \n");
+        } catch(ConnectException e) { 
+			System.out.println("The address is not reachable, please input right address");
+			System.exit(0);
+        } catch (Exception e1) {
+            System.out.println("Connection failed. You didn't enter the correct server address or port number. \n Please try again. \n");
         }
         client_obj.gui = new Client_GUI(client_obj);
         client_obj.gui.setBounds(100, 100, 600, 437);
-        client_obj.gui.setTitle("Shared Whiteboard");
+        client_obj.gui.setTitle("Shared Whiteboard (Client Version) --- "+ client_obj.username);
         client_obj.gui.setVisible(true);
         client_obj.gui.setBackground(Color.white);// set the color for the eraser func,but need
         // better solu
         client_obj.gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client_obj.gui.addWindowListener(client_obj.gui);
 
         Thread CommunicationThread = new Thread(() -> client_obj.start());
         CommunicationThread.start();
@@ -100,9 +105,9 @@ public class User implements ActionListener {
 
         try {
             os.writeUTF(newCommand.toJSONString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
         int count1 = 0;
 
@@ -168,11 +173,12 @@ public class User implements ActionListener {
                                     gui.updateImage(matrix);
                                     ta.append("Transmission complete.\n");
                                     ta.append("Join white board successfully.\n");
-                                    ta.append("Your user_id is " + Integer.parseInt(user_id) + ".\n");
+                                    ta.append("Your username is " + username +".\n");
+                                    ta.append("Your auto generated user id is " + Integer.parseInt(user_id) + ".\n");
                                 }
                             } else {
                                 ta.append(
-                                        "Cannot join the white board. Connection is refused by the manager.\n");
+                                        "Cannot join the white board. \n Connection is rejected by the manager.\n");
                                 ta.append("Please close the application.\n");
                                 break;
                             }
@@ -198,12 +204,12 @@ public class User implements ActionListener {
                             ua.append("User list: total 1 manager and "
                                     + received.get("user_count").toString() + " users\n");
                             ua.append("-------------------------------------------\n");
-                            ua.append("#ManagerName: user 0\n");
+                            ua.append("#ManagerName: User 0\n");
                             StringTokenizer user_list = new StringTokenizer(
                                     received.get("user").toString());
                             for (int i = 0; i < Integer
                                     .parseInt(received.get("user_count").toString()); i++) {
-                                ua.append("#Username: user " + user_list.nextToken() + "\n");
+                                ua.append("#Username: User " + user_list.nextToken() + "\n");
                             }
                             ua.append("-------------------------------------------\n");
                         } else if (command_name.equals("drawUpdate")) {
@@ -258,7 +264,7 @@ public class User implements ActionListener {
                                 ta2.append(received.get("content").toString()+"\n");
                             }
                             else {
-                                ta2.append("user "+username+": ");
+                                ta2.append("User "+username+": ");
                                 ta2.append(received.get("content").toString()+"\n");
                             }
                         }
@@ -266,12 +272,10 @@ public class User implements ActionListener {
                     }
                 }
             }
-        } catch (IOException e) {
-            ta.append(
-                    "connection failed. Didn't enter the correct server address or port number. \n Please try again. \n");
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            System.out.println("You didn't enter the correct ip address or port number.");
+        } catch (Exception e) {
+            System.out.println("Connection failed.");
         }
     }
 
@@ -287,11 +291,11 @@ public class User implements ActionListener {
                 this.port = Integer.parseInt(port);
             } catch (NumberFormatException e) {
                 ta.append(
-                        "invaild port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
             }
             if (this.port <= 1024 || this.port >= 65535) {
                 ta.append(
-                        "invaild port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
             }
 
         }
@@ -325,11 +329,12 @@ public class User implements ActionListener {
                         is.close();
                         // client.close();
                     }
-                } catch (IOException e2) {
-                    e2.printStackTrace();
+                } catch (Exception e2) {
+                    System.out.println("Connection Lost! Please close the application.");
                 } finally {
                     System.exit(0);
                 }
+
             }
 
             @Override
@@ -407,7 +412,7 @@ public class User implements ActionListener {
 
             }
         } catch (Exception ex) {
-            ta.append("Lose connection, Please close the client and reconnect to server. \n");
+            ta.append("Connection Lost! Please close the client and reconnect to server. \n");
         }
 
     }

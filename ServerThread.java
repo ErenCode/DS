@@ -1,11 +1,9 @@
-
 /*
  * author: Linchu Liu
  * ID: 978006
  */
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
@@ -34,8 +32,8 @@ public class ServerThread implements Runnable {
         try {
             input = new DataInputStream(this.client.getInputStream());
             output = new DataOutputStream(this.client.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Connection Lost! Please close the application.");
         }
     }
 
@@ -102,12 +100,9 @@ public class ServerThread implements Runnable {
                                     response=command;
                                     osClient.writeUTF(response.toJSONString());
                                     osClient.flush();
-                                    if (command.get("finish").equals("True")){
-                                    	server.getUser_map().put(client_ID,
-                                                client_list.get(client_ID));
-                                        sendList();
-
-                                    }
+                                    server.getUser_map().put(client_ID,
+                                            client_list.get(client_ID));
+                                    sendList();
                                 } else {
                                     response.put("command_name", "join_response");
                                     response.put("response", "failure");
@@ -139,7 +134,6 @@ public class ServerThread implements Runnable {
                         }
 
                         else if (command_name.equals("kick")) {
-                            System.out.println("mmmmmmm");
                             int client_ID = Integer.parseInt(command.get("client_ID").toString());
                             response.put("command_name", "notified");
                             response.put("reason", "kick");
@@ -309,8 +303,8 @@ public class ServerThread implements Runnable {
         } catch (ParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (IOException e) {
-
+        } catch (Exception e) {
+            System.out.println("Connection Lost! Please close the application.");
         }
 
     }
@@ -337,9 +331,8 @@ public class ServerThread implements Runnable {
                 user_os.flush();
             }
 
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Connection Lost! Please close the application.");
         }
     }
 

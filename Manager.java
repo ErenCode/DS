@@ -1,4 +1,3 @@
-
 /*
  * author: Linchu Liu
  * ID: 978006
@@ -27,7 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -39,15 +38,16 @@ public class Manager implements ActionListener {
     private TextField tf = null;
     private String address;
     private int port = 0;
+    private String username;
     private TextArea ta = null;
     private TextArea ta2 = null;
     private TextArea ua = null;
     private JButton kick = null;
     private JButton accept = null;
     private JButton reject = null;
-    public DataInputStream is = null;
+    private DataInputStream is = null;
     private DataOutputStream os = null;
-    public Socket client = null;
+    private Socket client = null;
     private JSONObject newCommand = null;
     private JFrame f2;
     private String join_client_ID = null;
@@ -66,26 +66,31 @@ public class Manager implements ActionListener {
         try {
             client_obj.address = args[0];
             client_obj.setPort(args[1]);
+            client_obj.username = args[2];
         } catch (ArrayIndexOutOfBoundsException e) {
-            client_obj.ta.append("Didn't enter address, \n");
-            client_obj.ta.append("or didn't enter port number. Please try again. \n");
+            System.out.println("You didn't enter all of address, port number and username.");
+            System.out.println("Please reopen this application and follow the pattern: java -jar Manager.jar <ip_address> <port_number> username");
+            System.exit(0);
         }
         try {
             client_obj.client = new Socket(client_obj.address, client_obj.port);
             client_obj.is = new DataInputStream(client_obj.client.getInputStream());
             client_obj.os = new DataOutputStream(client_obj.client.getOutputStream());
-        } catch (IOException e) {
+        }  catch(ConnectException e) { 
+			System.out.println("The address is not reachable, please input right address");
+			System.exit(0);
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
+
         client_obj.gui = new DS_GUI(client_obj);
         client_obj.gui.setBounds(100, 100, 600, 437);
-        client_obj.gui.setTitle("Shared Whiteboard (Manager Version)");
+        client_obj.gui.setTitle("Shared Whiteboard (Manager Version) --- " + client_obj.username);
         client_obj.gui.setVisible(true);
         client_obj.gui.setBackground(Color.white);// set the color for the eraser func,but need
         // better solu
         client_obj.gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        client_obj.gui.addWindowListener(client_obj.gui);
 
         Thread CommunicationThread = new Thread(() -> client_obj.start());
         CommunicationThread.start();
@@ -100,9 +105,9 @@ public class Manager implements ActionListener {
         newCommand.put("command_name", "create");
         try {
             os.writeUTF(newCommand.toJSONString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            System.out.println("Connection Lost! Please close the application.");
         }
         int count1 = 0;
     }
@@ -127,7 +132,7 @@ public class Manager implements ActionListener {
                         if (command_name.equals("create")) {
                             String response = received.get("response").toString();
                             if (response.equals("success")) {
-                                ta.append("Manager create a new white board successfully.\n");
+                                ta.append(username + " create a new white board successfully.\n");
                             } else {
                                 ta.append("Cannot create a new white board.\n");
                                 ta.append("Please close the manager GUI.\n");
@@ -160,13 +165,13 @@ public class Manager implements ActionListener {
                             ua.append("User list: total 1 manager and "
                                     + received.get("user_count").toString() + " users.\n");
                             ua.append("-------------------------------------------\n");
-                            ua.append("#ManagerName: user 0\n");
+                            ua.append("#ManagerName: User 0\n");
                             StringTokenizer user_list = new StringTokenizer(
                                     received.get("user").toString());
                             for (int i = 0; i < Integer
                                     .parseInt(received.get("user_count").toString()); i++) {
                                 String user = user_list.nextToken();
-                                ua.append("#Username: user " + user + "\n");
+                                ua.append("#Username: User " + user + "\n");
                                 user_array.add(Integer.parseInt(user));
                             }
                             ua.append("-------------------------------------------\n");
@@ -204,7 +209,7 @@ public class Manager implements ActionListener {
 
                         else if (command_name.equals("message")) {
                             String username=received.get("which").toString();
-                            ta2.append("user "+username+": ");
+                            ta2.append("User "+username+": ");
                             ta2.append(received.get("content").toString()+"\n");
                         }
 
@@ -217,12 +222,10 @@ public class Manager implements ActionListener {
                 }
             }
 
-        } catch (IOException e) {
-            ta.append(
-                    "connection failed. Didn't enter the correct server address or port number. \n Please try again. \n");
-        } catch (ParseException e) {
-
-            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            System.out.println("You didn't enter the correct ip address or port number.");
+        } catch (Exception e) {
+            System.out.println("Connection failed.");
         }
     }
 
@@ -263,11 +266,11 @@ public class Manager implements ActionListener {
                 this.port = Integer.parseInt(port);
             } catch (NumberFormatException e) {
                 ta.append(
-                        "invaild port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
             }
             if (this.port <= 1024 || this.port >= 65535) {
                 ta.append(
-                        "invaild port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
             }
 
         }
@@ -291,10 +294,6 @@ public class Manager implements ActionListener {
 
             }
 
-            
-            
-            
-            
             @Override
             public void windowClosing(WindowEvent e) {
                 newCommand = new JSONObject();
@@ -305,8 +304,8 @@ public class Manager implements ActionListener {
                     os.close();
                     is.close();
                     client.close();
-                } catch (IOException e2) {
-
+                } catch (Exception e2) {
+                    System.out.println("Connection Lost! Please close the application.");
                 } finally {
                     System.exit(0);
                 }
@@ -427,7 +426,7 @@ public class Manager implements ActionListener {
                         if (user_array != null) {
                             for (int user_ID : user_array) {
                                 if (Integer.parseInt(client_ID) == user_ID) {
-                                    ta.append("Kick user successful.\n");
+                                    ta.append("Removal of User " + client_ID +" is successful.\n");
                                     is_user = true;
                                     break;
                                 }
@@ -442,9 +441,9 @@ public class Manager implements ActionListener {
                         try {
                             os.writeUTF(newCommand.toString());
                             os.flush();
-                        } catch (IOException e1) {
+                        } catch (Exception e1) {
                             // TODO Auto-generated catch block
-                            e1.printStackTrace();
+                            System.out.println("Connection Lost! Please close the application.");
                         }
                     }
                 });
@@ -494,12 +493,11 @@ public class Manager implements ActionListener {
                             os.flush();
                         }
                         assert sum == matrixString.length();
-                    }catch(IIOException e2) {
+                    } catch(IIOException e2) {
                         System.out.println("Cannot read file.");
-                    }
-                    catch (IOException e1) {
+                    } catch (Exception e1) {
                         // TODO Auto-generated catch block
-                        e1.printStackTrace();
+                        System.out.println("Connection Lost! Please close the application.");
                     }
                     ta.append("User " + join_client_ID + " is connected.\n");
                 }
@@ -540,7 +538,7 @@ public class Manager implements ActionListener {
             }
 
         } catch (Exception ex) {
-            ta.append("Lose connection, Please close the client and reconnect to server. \n");
+            ta.append("Connection Lost! Please close the client and reconnect to server. \n");
         }
 
     }
