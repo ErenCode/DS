@@ -60,6 +60,8 @@ public class Manager implements ActionListener {
     private boolean canAccept = true;
     private JButton send;
 
+    private boolean alreadyExists = false;
+
     public static void main(String[] args) {
         Manager client_obj = new Manager();
         try {
@@ -137,7 +139,14 @@ public class Manager implements ActionListener {
                             String response = received.get("response").toString();
                             if (response.equals("success")) {
                                 ta.append(username + " create a new white board successfully.\n");
-                            } else {
+                            }else if(response.equals("already_exists"))
+                            {
+                                alreadyExists = true;
+                                JOptionPane.showMessageDialog(null, "Manager already exists. Closing the application");
+                                System.exit(0);
+                                break;
+                            }
+                            else {
                                 // ta.append("Cannot create a new white board.\n");
                                 // ta.append("Please close the manager GUI.\n");
                                 JOptionPane.showMessageDialog(null, "Cannot create a new white board. Closing the application");
@@ -313,13 +322,17 @@ public class Manager implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e) {
                 newCommand = new JSONObject();
-                newCommand.put("command_name", "close");
+                if(!alreadyExists) {
+                    newCommand.put("command_name", "close");
+                }
                 try {
-                    os.writeUTF(newCommand.toJSONString());
+                    if(!alreadyExists) {
+                        os.writeUTF(newCommand.toJSONString());
+                    }
                     os.flush();
                     os.close();
                     is.close();
-            //        client.close();
+                    client.close();
                 } catch (Exception e2) {
                     //   System.out.println("Connection Lost! Please close the application.");
                     JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");

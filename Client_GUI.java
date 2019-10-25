@@ -78,7 +78,7 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         colorBt = new JComboBox(strings);
         textBt = new JButton("text");
         textBt.addKeyListener(this);
-        
+
 
         // create the panel
         JPanel btnPanel = new JPanel();
@@ -126,7 +126,7 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         content.add(shape, BorderLayout.CENTER);// add the wb
         // content.add(JMenuBar,BorderLayout.NORTH);//add the menu
         // setJMenuBar(JMenuBar);// this is also ok for menu bar
-        
+
 
         // this part is to add action for the button
         lineBt.addActionListener(new ActionListener() {
@@ -369,28 +369,28 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         }
 
     }
-    
-    
+
+
 
     private void drawDragged(String type, Graphics2D g2) {
-    	switch (type) {
-		case "eraser":
-			// g2.setColor(Color.white);
-			g2.setColor(new Color(254, 255, 255));// similar to white
-			g2.setStroke(new BasicStroke(20));
-			g2.drawLine(startX, startY, endX, endY);
-			g2.setColor(this.c);
-			break;
-		case "pen":
-			// how to implement the pen func
-			g2.drawLine(startX, startY, endX, endY);
-			break;
-		default:
-			break;
-    	}
-	}
+        switch (type) {
+            case "eraser":
+                // g2.setColor(Color.white);
+                g2.setColor(new Color(254, 255, 255));// similar to white
+                g2.setStroke(new BasicStroke(20));
+                g2.drawLine(startX, startY, endX, endY);
+                g2.setColor(this.c);
+                break;
+            case "pen":
+                // how to implement the pen func
+                g2.drawLine(startX, startY, endX, endY);
+                break;
+            default:
+                break;
+        }
+    }
 
-	private void drawText(String type, Graphics2D g2,String text) {
+    private void drawText(String type, Graphics2D g2,String text) {
         g2.drawString(text,startX,startY);
 
     }
@@ -509,21 +509,21 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
 
     }
 
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowOpened(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowClosing(WindowEvent e) {
-		JSONObject newCommand = new JSONObject();
-		newCommand = new JSONObject();
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        JSONObject newCommand = new JSONObject();
+        newCommand = new JSONObject();
         newCommand.put("command_name", "quit");
         newCommand.put("client_ID", user.user_id);
         try {
             if (!user.is_kicked) {
-            	os.writeUTF(newCommand.toJSONString());
+                os.writeUTF(newCommand.toJSONString());
                 os.flush();
                 os.close();
                 user.is.close();
@@ -537,36 +537,36 @@ class Client_GUI extends JFrame implements ItemListener,KeyListener,WindowListen
         } finally {
             System.exit(0);
         }
-	}
+    }
 
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowIconified(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

@@ -15,6 +15,7 @@ public class Server {
     //store the current users and its id.
     private HashMap<Integer, Socket> user_map = new HashMap<Integer, Socket>();
     private Socket manager;
+    private boolean hasManager = false;
     private boolean hasWB = false;
 
     public static void main(String[] args) {
@@ -74,6 +75,15 @@ public class Server {
 
     public void setManager(Socket manager) {
         this.manager = manager;
+    }
+
+    public void setHasManager(boolean hasManager)
+    {
+        this.hasManager = hasManager;
+    }
+
+    public boolean getHasManager() {
+        return hasManager;
     }
 
     public Socket getManager() {

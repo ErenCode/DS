@@ -83,7 +83,7 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
         JMenuBar.add(JMenuNew);
         JMenuBar.add(JMenuSave);
         JMenuBar.add(JMenuSaveAs);
-    //    JMenuBar.add(JMenuClose);
+        //    JMenuBar.add(JMenuClose);
 
         // create the panel
         JPanel btnPanel = new JPanel();
@@ -262,9 +262,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
         });
 
         JMenuNew.addMouseListener(new MouseAdapter() {
-        	
+
             public void mouseClicked(MouseEvent e) {
-            	shape.setObject("");
+                shape.setObject("");
                 JSONObject command = new JSONObject();
                 command.put("command_name", "newPicture");
                 try {
@@ -326,9 +326,9 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
                 saveDialog();
                 myImage = shape.getBufImage();
                 try {if(!filePath.equals("")) {
-					ImageIO.write(myImage, "jpg", new File(filePath + ".jpg"));
-					}
-				} catch (Exception e1) {
+                    ImageIO.write(myImage, "jpg", new File(filePath + ".jpg"));
+                }
+                } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     // System.out.println("Connection Lost! Please close the application.");
                     JOptionPane.showMessageDialog(null, "Connection Lost! Closing thhe application");
@@ -366,13 +366,13 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
         /*
          * while(fd.getFile()==null) { continue; }
          */
-		if (fd.getDirectory() != null) {
+        if (fd.getDirectory() != null) {
 
-			filePath = fd.getDirectory() + fd.getFile();
-		}else {
-			filePath = "";
-		}
-	}
+            filePath = fd.getDirectory() + fd.getFile();
+        }else {
+            filePath = "";
+        }
+    }
 
     public int[][] getMatrixofImage() {
         BufferedImage bimg;
@@ -571,25 +571,25 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
     }
 
     private void drawDragged(String type, Graphics2D g2) {
-    	switch (type) {
-		case "eraser":
-			// g2.setColor(Color.white);
-			g2.setColor(new Color(254, 255, 255));// similar to white
-			g2.setStroke(new BasicStroke(20));
-			g2.drawLine(startX, startY, endX, endY);
-			g2.setColor(this.c);
-			break;
-		case "pen":
-			// how to implement the pen func
-			g2.drawLine(startX, startY, endX, endY);
-			break;
-		default:
-			break;
-		}
-		
-	}
+        switch (type) {
+            case "eraser":
+                // g2.setColor(Color.white);
+                g2.setColor(new Color(254, 255, 255));// similar to white
+                g2.setStroke(new BasicStroke(20));
+                g2.drawLine(startX, startY, endX, endY);
+                g2.setColor(this.c);
+                break;
+            case "pen":
+                // how to implement the pen func
+                g2.drawLine(startX, startY, endX, endY);
+                break;
+            default:
+                break;
+        }
 
-	private void drawText(String type, Graphics2D g2,String text) {
+    }
+
+    private void drawText(String type, Graphics2D g2,String text) {
 
 
         g2.drawString(text,startX,startY);
@@ -721,16 +721,16 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
 
     }
 
-	@Override
-	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowOpened(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowClosing(WindowEvent e) {
-		JSONObject newCommand = new JSONObject();
-		newCommand = new JSONObject();
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        JSONObject newCommand = new JSONObject();
+        newCommand = new JSONObject();
         newCommand.put("command_name", "close");
         try {
             os.writeUTF(newCommand.toJSONString());
@@ -745,38 +745,38 @@ class DS_GUI extends JFrame implements ItemListener , KeyListener,WindowListener
         } finally {
             System.exit(0);
         }
-		
-	}
 
-	@Override
-	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowClosed(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void windowIconified(WindowEvent e) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        // TODO Auto-generated method stub
+
+    }
 
 
 

@@ -104,7 +104,7 @@ public class User implements ActionListener {
         newCommand.put("command_name", "create");
 
         try {
-            os.writeUTF(newCommand.toJSONString());
+            //   os.writeUTF(newCommand.toJSONString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
             JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
@@ -338,11 +338,11 @@ public class User implements ActionListener {
                 newCommand.put("client_ID", user_id);
                 try {
                     if (!is_kicked) {
-                    	os.writeUTF(newCommand.toJSONString());
+                        os.writeUTF(newCommand.toJSONString());
                         os.flush();
                         os.close();
                         is.close();
-       
+
                         // client.close();
                     }
                 } catch (Exception e2) {
