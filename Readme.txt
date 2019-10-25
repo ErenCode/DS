@@ -1,6 +1,8 @@
 This project is a shared whiteboard that allows multiple users to draw simultaneously on a canvas.
 
-This shared whiteboard supports a range of features such as freehand drawing with the mouse, drawing lines and shapes such as circles and rectangles and inserting text. In addition to theses features, this implementation also has a chat window which allows all the current users of the system to broadcast messages to each other.
+This shared whiteboard supports a range of features such as freehand drawing with the mouse, drawing lines and shapes such as circles and
+rectangles and inserting text. In addition to theses features, this implementation also has a chat window which allows all the current
+users of the system to broadcast messages to each other.
 
 To run these files, please do the following steps:
 
