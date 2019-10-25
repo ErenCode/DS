@@ -281,7 +281,7 @@ public class User implements ActionListener {
             JOptionPane.showMessageDialog(null, "You didn't enter the correct ip address or port number.. Closing the application.");
             System.exit(0);
         } catch (Exception e) {
-            System.out.println("Connection failed.");
+    //        System.out.println("Connection failed.");
             JOptionPane.showMessageDialog(null, "Connection Failed. Closing the application.");
             System.exit(0);
         }
