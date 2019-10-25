@@ -334,7 +334,6 @@ public class ServerThread implements Runnable {
             count++;
             user_list = user_list + String.valueOf(user_id) + " ";
         }
-        System.out.println(count);
         response.put("command_name", "list");
         response.put("user", user_list);
         response.put("user_count", count);

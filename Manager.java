@@ -138,7 +138,7 @@ public class Manager implements ActionListener {
                         if (command_name.equals("create")) {
                             String response = received.get("response").toString();
                             if (response.equals("success")) {
-                                ta.append(username + " create a new white board successfully.\n");
+                                ta.append(username + " creates a new white board successfully.\n");
                             }else if(response.equals("already_exists"))
                             {
                                 alreadyExists = true;
@@ -564,6 +564,7 @@ public class Manager implements ActionListener {
                     os.writeUTF(newCommand.toString());
                     os.flush();
                     ta2.append("You: "+tf.getText()+"\n");
+                    tf.setText("");
                 }
                 else {
                     //ta.append("You cannot enter empty input.\n");

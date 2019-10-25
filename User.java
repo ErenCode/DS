@@ -422,6 +422,7 @@ public class User implements ActionListener {
                     os.writeUTF(newCommand.toString());
                     os.flush();
                     ta2.append("You: "+tf.getText()+"\n");
+                    tf.setText("");
                 }
                 else {
                     //ta.append("You cannot enter empty input.\n");
