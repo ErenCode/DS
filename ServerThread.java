@@ -52,20 +52,28 @@ public class ServerThread implements Runnable {
                         String command_name = command.get("command_name").toString();
                         if (command_name.equals("create")) {
 
-                            // current no white board
-                            if (server.getHasWB() == false) {
-                                // need to change parameters
+                            if(!server.getHasManager()) {
+                                // current no white board
+                                if (server.getHasWB() == false) {
+                                    // need to change parameters
 //								WhiteBoard wb = new WhiteBoard();
 //								whiteboard_list.add(wb);
-                                client_list.add(client);
-                                server.setManager(client);
-                                server.setHasWB(true);
-                                response.put("command_name", "create");
-                                response.put("response", "success");
-                                output.writeUTF(response.toJSONString());
+                                    client_list.add(client);
+                                    server.setManager(client);
+                                    server.setHasWB(true);
+                                    response.put("command_name", "create");
+                                    response.put("response", "success");
+                                    server.setHasManager(true);
+                                    output.writeUTF(response.toJSONString());
 
-                            } else {
-                                response.put("response", "failure");
+                                } else {
+                                    response.put("response", "failure");
+                                    output.writeUTF(response.toJSONString());
+                                }
+                            }else
+                            {
+                                response.put("command_name","create");
+                                response.put("response","already_exists");
                                 output.writeUTF(response.toJSONString());
                             }
 
@@ -306,7 +314,8 @@ public class ServerThread implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-          //  System.out.println("Connection Lost! Please close the application.");
+            //  System.out.println("Connection Lost! Please close the application.");
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application.");
             System.exit(0);
         }
@@ -336,7 +345,8 @@ public class ServerThread implements Runnable {
             }
 
         } catch (Exception e) {
-           // System.out.println("Connection Lost! Please close the application.");
+            e.printStackTrace();
+            // System.out.println("Connection Lost! Please close the application.");
             JOptionPane.showMessageDialog(null, "Connection Lost. Closing the application.");
             System.exit(0);
         }

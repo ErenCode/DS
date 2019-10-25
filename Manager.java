@@ -60,6 +60,8 @@ public class Manager implements ActionListener {
     private boolean canAccept = true;
     private JButton send;
 
+    private boolean alreadyExists = false;
+
     public static void main(String[] args) {
         Manager client_obj = new Manager();
         try {
@@ -75,9 +77,9 @@ public class Manager implements ActionListener {
             client_obj.client = new Socket(client_obj.address, client_obj.port);
             client_obj.is = new DataInputStream(client_obj.client.getInputStream());
             client_obj.os = new DataOutputStream(client_obj.client.getOutputStream());
-        }  catch(ConnectException e) { 
-			System.out.println("The address is not reachable, please input right address");
-			System.exit(0);
+        }  catch(ConnectException e) {
+            System.out.println("The address is not reachable, please input right address");
+            System.exit(0);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             //System.out.println("Connection Lost! Please close the application.");
@@ -136,9 +138,16 @@ public class Manager implements ActionListener {
                             String response = received.get("response").toString();
                             if (response.equals("success")) {
                                 ta.append(username + " create a new white board successfully.\n");
-                            } else {
-                               // ta.append("Cannot create a new white board.\n");
-                               // ta.append("Please close the manager GUI.\n");
+                            }else if(response.equals("already_exists"))
+                            {
+                                alreadyExists = true;
+                                JOptionPane.showMessageDialog(null, "Manager already exists. Closing the application");
+                                System.exit(0);
+                                break;
+                            }
+                            else {
+                                // ta.append("Cannot create a new white board.\n");
+                                // ta.append("Please close the manager GUI.\n");
                                 JOptionPane.showMessageDialog(null, "Cannot create a new white board. Closing the application");
                                 System.exit(0);
                                 break;
@@ -276,13 +285,13 @@ public class Manager implements ActionListener {
             try {
                 this.port = Integer.parseInt(port);
             } catch (NumberFormatException e) {
-              //  ta.append(
-              //          "Invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
+                //  ta.append(
+                //          "Invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
                 JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again.");
                 System.exit(0);
             }
             if (this.port <= 1024 || this.port >= 65535) {
-               // ta.append(
+                // ta.append(
                 //        "invalid port number. The range of port number is from 1025 to 65534. Please try again. \n");
                 JOptionPane.showMessageDialog(null, "Invalid port number. The range of port number is from 1025 to 65534. Please try again.");
                 System.exit(0);
@@ -312,15 +321,19 @@ public class Manager implements ActionListener {
             @Override
             public void windowClosing(WindowEvent e) {
                 newCommand = new JSONObject();
-                newCommand.put("command_name", "close");
+                if(!alreadyExists) {
+                    newCommand.put("command_name", "close");
+                }
                 try {
-                    os.writeUTF(newCommand.toJSONString());
+                    if(!alreadyExists) {
+                        os.writeUTF(newCommand.toJSONString());
+                    }
                     os.flush();
                     os.close();
                     is.close();
                     client.close();
                 } catch (Exception e2) {
-                 //   System.out.println("Connection Lost! Please close the application.");
+                    //   System.out.println("Connection Lost! Please close the application.");
                     JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");
                     System.exit(0);
                 } finally {
@@ -356,7 +369,7 @@ public class Manager implements ActionListener {
         tf = new TextField(35);
         tf.setFont(ft);
         kick = new JButton("Kick");
-		kick.setForeground(Color.gray);
+        kick.setForeground(Color.gray);
         kick.addActionListener(this);
         kick.setFont(ft);
         kick.setActionCommand("kick");
@@ -460,7 +473,7 @@ public class Manager implements ActionListener {
                             os.flush();
                         } catch (Exception e1) {
                             // TODO Auto-generated catch block
-                           // System.out.println("Connection Lost! Please close the application.");
+                            // System.out.println("Connection Lost! Please close the application.");
                             JOptionPane.showMessageDialog(null, "Connection lost! Closing the application.");
                             System.exit(0);
                         }

@@ -75,9 +75,9 @@ public class User implements ActionListener {
             client_obj.newCommand.put("command_name", "join_request");
             client_obj.os.writeUTF(client_obj.newCommand.toJSONString());
 
-        } catch(ConnectException e) { 
-			System.out.println("The address is not reachable, please input right address");
-			System.exit(0);
+        } catch(ConnectException e) {
+            System.out.println("The address is not reachable, please input right address");
+            System.exit(0);
         } catch (Exception e1) {
             System.out.println("Connection failed. You didn't enter the correct server address or port number. \n Please try again. \n");
             System.exit(0);

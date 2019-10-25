@@ -15,6 +15,7 @@ public class Server {
     //store the current users and its id.
     private HashMap<Integer, Socket> user_map = new HashMap<Integer, Socket>();
     private Socket manager;
+    private boolean hasManager = false;
     private boolean hasWB = false;
 
     public static void main(String[] args) {
@@ -31,22 +32,22 @@ public class Server {
             }
 
         } catch (NumberFormatException e) {
-           // System.out.println("You must input a number as port number.");
+            // System.out.println("You must input a number as port number.");
             JOptionPane.showMessageDialog(null, "You must input a number as port number.");
             System.exit(0);
         } catch (ArrayIndexOutOfBoundsException e) {
-           // System.out.println("You must input one and only one number as port number.");
+            // System.out.println("You must input one and only one number as port number.");
             JOptionPane.showMessageDialog(null, "You must input one and only one number as port number.");
             System.exit(0);
         } catch (Exception e) {
             // TODO Auto-generated catch block
-           // System.out.println("Connection Lost! Please close the application.");
-            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
+            System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost(main Server)! Closing the application.");
             System.exit(0);
         }
     }
 
-    private void start(Server server,int port) throws Exception {
+    private void start(Server server, int port) throws Exception {
         serverSocket = new ServerSocket(port);
         int client_identifier = 0;
         while (true) {
@@ -65,8 +66,8 @@ public class Server {
             serverSocket.close();
         } catch (Exception e) {
             // TODO Auto-generated catch block
-            //System.out.println("Connection Lost! Please close the application.");
-            JOptionPane.showMessageDialog(null, "Connection Lost! Closing the application.");
+            System.out.println("Connection Lost! Please close the application.");
+            JOptionPane.showMessageDialog(null, "Connection Lost(close Server)! Closing the application.");
             System.exit(0);
         }
         System.exit(0);
@@ -74,6 +75,15 @@ public class Server {
 
     public void setManager(Socket manager) {
         this.manager = manager;
+    }
+
+    public void setHasManager(boolean hasManager)
+    {
+        this.hasManager = hasManager;
+    }
+
+    public boolean getHasManager() {
+        return hasManager;
     }
 
     public Socket getManager() {
